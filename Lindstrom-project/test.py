@@ -96,9 +96,11 @@ cmap = mcolors.ListedColormap(colors[:bins])
 bounds = np.arange(bins + 1)
 norm = mcolors.BoundaryNorm(bounds, cmap.N)
 
+labelMap = {1:"#", 7:"X"}
+
 plt.figure(figsize=(10, 12))
 im = plt.imshow(matrix, cmap=cmap, norm=norm, interpolation='none')
-plt.colorbar(im, ticks=bounds[:-1], boundaries=bounds, label='Occupancy (0=empty, 1=storage, 7=pickUp)')
+plt.colorbar(im, ticks=bounds[:-1], boundaries=bounds, label='Occupancy (#=storage, X=pickUp)')
 plt.title('Warehouse Layout Heatmap')
 plt.xlabel('Columns (A-Q)')
 plt.ylabel('Rows (1-18)')
@@ -107,5 +109,6 @@ for i in range(matrix.shape[0]):
     for j in range(matrix.shape[1]):
         val = matrix[i, j]
         if val != 0:
-            plt.text(j, i, str(matrix[i,j]), ha='center', va='center', fontsize=8)
+            label = labelMap.get(val, str(val))
+            plt.text(j, i, label, ha='center', va='center', fontsize=8)
 plt.show()
