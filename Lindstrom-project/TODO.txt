@@ -1,0 +1,23 @@
+Manager Dashboard
+├──  Map Editor       <- map editor
+├──  Orders           <- create/dispatch orders
+|
+|   polish the statuses and actions functionalities and responsivnes
+|   validations
+|   refresh button + auto refresh
+|   filters
+|
+├──  Workers          <- monitor active workers
+|
+|   FIX
+|   Add is not working properly while adding is fine but when i delete or edit one worker 
+|   everything falls apart it locks in on this one worker
+|
+└──  Settings
+
+Worker Dashboard
+├── Map view    <- Navigation interface
+├── Order lookup    <- details about current order e.g. items codes, order of items
+├── Order claimer    <- interface to claim an order
+├── Work status <- activating a shift or break  (Not sure about this tab)
+└── Settings

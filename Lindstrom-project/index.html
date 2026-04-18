@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Warehouse Manager</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div class="app">
+        <div class="sidebar">
+            <h2>Warehouse</h2>
+            <nav>
+                <button class="nav-btn " data-view="editor">Map Editor</button>
+                <button class="nav-btn active" data-view="orders">Orders</button>
+                <button class="nav-btn" data-view="workers">Workers</button>
+                <button class="nav-btn" data-view="settings">Settings</button>
+            </nav>
+        </div>
+
+        <div class="main">
+            <!-- MAP EDITOR VIEW -->
+            <div class="view" id="view-editor">
+                <h1>Map Editor</h1>
+                <div class="controls">
+                    <button id="shelfBtn">Set Shelf</button>
+                    <button id="itemBtn">Set Item</button>
+
+                    <button id="clearBtn">Clear</button>
+                    <label>W: <input type="number" id="WidthInput" value="17" min="5" max="50"></label>
+                    <label>H: <input type="number" id="HeightInput" value="18" min="5" max="50"></label>
+                    
+                    <input type="text" id="mapName" placeholder="Map name">
+                    <select id="mapSelect">
+                        <option value="">Load map...</option>
+                    </select>
+                    
+                    <button id="deleteMapBtn">Delete</button>
+                    <button id="saveBtn">Save Map</button>
+                    <button id="runBtn">Run Algorithm</button>
+                </div>
+                <canvas id="map"></canvas>
+                <!-- map editor popup -->
+                <div id="shelfPopup" class="popup hidden">
+                    <div class="popup-content">
+                        <h3>Shelf Settings</h3>
+                        <div class="popup-row">
+                            <label>Group</label>
+                            <input type="text" id="shelfGroup" maxlength="3" placeholder="A" />
+                        </div>
+                        <div class="popup-row">
+                            <label>Direction</label>
+                            <select id="shelfDirection">
+                                <option value="lr">Left -> Right</option>
+                                <option value="rl">Right -> Left</option>
+                                <option value="tb">Top -> Bottom</option>
+                                <option value="bt">Bottom -> Top</option>
+                            </select>
+                        </div>
+                        <div class="popup-row">
+                            <label>Start from</label>
+                            <input type="number" id="shelfStart" value="1" min="1" />
+                        </div>
+                        <div class="popup-row">
+                            <label>Step</label>
+                            <input type="number" id="shelfStep" value="1" min="1" />
+                        </div>
+                        <div class="popup-buttons">
+                            <button id="shelfPopupConfirm">Confirm</button>
+                            <button id="shelfPopupCancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="shelfTooltip" class="tooltip hidden"></div>
+            </div>
+
+            <!-- ORDERS VIEW -->
+            <div class="view active" id="view-orders">
+                <h1>Orders</h1>
+                <div class="controls">
+                    <button id="createOrderBtn">Create Order</button>
+                </div>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Map</th>
+                            <th>Items</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Deadline</th>
+                            <th>Worker</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr><td colspan="8">No orders yet.</td></tr>
+                    </tbody>
+                </table>
+                <!-- orders create popup -->
+                <div id="orderPopup" class="popup hidden">
+                    <div class="popup-content">
+                        <h3>Create order</h3>
+                        <div class="popup-row">
+                            <label>Map</label>
+                            <select id="orderMap"></select>
+                        </div>
+                        <div class="popup-row">
+                            <label>Items</label>
+                            <textarea id="orderItems" placeholder="One item code per line&#10;A001XXX&#10;B002XXX"></textarea>
+                        </div>
+                        <div class="popup-row">
+                            <label>Priority</label>
+                            <select id="orderPriority">
+                                <option value="low">Low</option>
+                                <option value="normal">Normal</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="popup-row">
+                            <label>Deadline</label>
+                            <input type="datetime-local" id="orderDeadline"/>
+                        </div>
+                        <div class="popup-button">
+                            <button id="orderPopupConfirm">Create</button>
+                            <button id="orderPopupCancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- order edit popup -->
+                <div id="editOrderPopup" class="popup hidden">
+                    <div class="popup-content">
+                        <h3>Edit Order</h3>
+                        <div class="popup-row">
+                            <label>Status</label>
+                            <select id="editOrderStatus">
+                                <option value="pending">Pending</option>
+                                <option value="assigned">Assigned</option>
+                                <option value="in-progress">In progress</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="popup-row">
+                            <label>Worker</label>
+                            <select id="editOrderWorker"></select>
+                        </div>
+                        <div class="popup-row">
+                            <label>Priority</label>
+                            <select id="editOrderPriority">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="popup-row">
+                            <label>Deadline</label>
+                            <input type="datetime-local" id="editOrderDeadline"/>
+                        </div>
+                        <div class="popup-buttons">
+                            <button id="editOrderConfirm">Save</button>
+                            <button id="editOrderCancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WORKERS VIEW -->
+            <div class="view" id="view-workers">
+                <h1>Workers</h1>
+                <div class="controls">
+                    <button id="createWorkerBtn">Add Worker</button>
+                </div>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="workersTableBody">
+                        <tr><td colspan="5">No workers yet.</td></tr>
+                    </tbody>
+                </table>
+
+                <!-- add worker popup-->
+                <div id="workerPopup" class="popup hidden">
+                    <div class="popup-content">
+                        <h3>Add worker</h3>
+                        <div class="popup-row">
+                            <label>Name</label>
+                            <input type="text" id="workerName" placeholder="Worker name" />
+                        </div>
+                        <div class="popup-row">
+                            <label>Status</label>
+                            <select id="workerStatus">
+                                <option value="available">Available</option>
+                                <option value="busy">Busy</option>
+                                <option value="offline">Offline</option>
+                            </select>
+                        </div>
+                        <div class="popup-buttons">
+                            <button id="workerPopupConfirm">Add</button>
+                            <button id="workerPopupCancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS VIEW -->
+            <div class="view" id="view-settings">
+            <h1>Settings</h1>
+            <div class="settings-group">
+                <h3>Appearance</h3>
+                <div class="control-group">
+                    <label>Theme</label>
+                    <button id="themeBtn">Light Mode</button>
+                </div>
+            </div>
+            <div class="settings-group">
+                <h3>Algorithm</h3>
+                <div class="control-group">
+                    <label>Animation speed</label>
+                    <input type="range" id="speedSlider" min="10" max="200" value="60" />
+                    <span id="speedLabel">60ms</span>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
