@@ -9,11 +9,9 @@ Manager Dashboard
 |
 ├──  Workers          <- monitor active workers
 |
-|   FIX
-|   Add is not working properly while adding is fine but when i delete or edit one worker 
-|   everything falls apart it locks in on this one worker
-|
 └──  Settings
+
+Archive
 
 Worker Dashboard
 ├── Map view    <- Navigation interface

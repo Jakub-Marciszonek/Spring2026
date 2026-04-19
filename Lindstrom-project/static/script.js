@@ -567,6 +567,7 @@ function renderOrders(orders) {
             <td>${o.deadline ? new Date(o.deadline).toLocaleString() : "-"}</td>
             <td>${o.worker || "-"}</td>
             <td>
+                <button onclick="previewOrder('${o.id}')">Preview</button>
                 <button onclick="editOrder('${o.id}')">Edit</button>
                 <button onclick="cancelOrder('${o.id}')" ${o.status === "cancelled" ? "disabled" : ""}>Cancel</button>
             </td>
@@ -595,6 +596,33 @@ createOrderBtn.onclick = async () => {
     await populateOrderMaps();
     orderPopup.classList.remove("hidden");
 };
+
+async function previewOrder(id) {
+    const res = await fetch(`/api/orders/${id}/preview`);
+    const data = await res.json();
+
+    if (data.errors.length > 0) {
+        alert("Some items could not be resolved:\n" + data.errors.join("\n"));
+    }
+
+    W = data.map.dimensions[0];
+    H = data.map.dimensions[1];
+    shelves = data.map.shelves ? Object.entries(data.map.shelves).flatMap(([group, cells]) =>
+        cells.map(c => ({ coords: c.coords, group, code: c.code }))
+    ) : [];
+    items = data.items;
+
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.querySelector("[data-view='editor']").classList.add("active");
+    document.getElementById("view-editor").classList.add("active");
+
+    canvas.width = W * size;
+    canvas.height = H * size;
+    drawGrid();
+
+    solve();
+}
 
 // order create popup
 orderPopupCancel.onclick = () => {
