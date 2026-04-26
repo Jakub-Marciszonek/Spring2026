@@ -1,7 +1,11 @@
 Repository for university projects for 2026 spring semester.
 # ML
 
-## Folder for university tasks about machine learning
+## Directory for university tasks about machine learning
+
+# ML_task
+
+## Directory for machine learining task assigned for lack of ML model in the project
 
 # Lindström prject
 

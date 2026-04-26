@@ -652,7 +652,7 @@ async function validateItems(items, mapName) {
 
         const shelf = mapData.shelves[group].find(s => s.code === code);
         if (!shelf) {
-            error.push(`"${item}" - code not found in shelf group "${group}"`);
+            errors.push(`"${item}" - code not found in shelf group "${group}"`);
         }
     });
 

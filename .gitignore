@@ -1,4 +1,5 @@
 venv/
+data/
 Lindstrom-project/warehouse.db
 Lindstrom-project/TODO.txt
 Lindstrom-project/instance/
